@@ -9,10 +9,10 @@ DB_PATH = path.join(path.abspath('website'), DB_NAME)
 
 
 db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="root",
-    database="mydatabase"
+    host="",
+    user="",
+    password="",
+    database=""
 )
 cursor = db.cursor()
 
