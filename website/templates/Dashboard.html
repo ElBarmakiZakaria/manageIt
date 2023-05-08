@@ -1,0 +1,189 @@
+
+
+{% extends "base.html" %}
+{% block authentication %}
+    <div class="profile-logout">
+        <div id="profile" class="profile" onclick="showdropdown()" isclicked="false">
+        </div>
+        <ul id="dropdown" class="dropdown">
+            <li style=" text-align: center;" ><a style="color:rgb(141, 0, 0); font-size: 19px;" >{{ current_user.username}}</a></li>
+            <li><a class="" href="#"><span class="bi bi-people icons"></span>   My account</a></li>
+            <li><a class="" href="#"><span class="bi bi-person icons"></span>   Profile</a></li>
+            <li><a class="" href="#"><span class="bi bi-gear icons"></span>   Setting</a></li>
+            <li><hr class=""></li>
+            <li><a class="" href="/logout"><span class="bi bi-box-arrow-left icons"></span>   Log out</a></li>
+        </ul>
+
+
+    </div>
+{% endblock %}
+
+{% block content%}
+<div class="task-container">
+    <div class="ldakhel" id="ldakhel">
+
+        {% if lengt == 0 %}
+        <h1>No Tasks Yet</h1>
+        {% endif %}
+        {% if lengt>0 %}
+        <h1>Tasks:</h1>
+
+        <div class="tasks-card" id="tasks-card">
+            {% for task in data %}
+            <div class="card-body row" id="card-body-{{loop.index}}" onclick="handleCardClick('{{task[0]}}','{{task[2]}}', '{{task[3]}}', '{{task[4]}}', '{{task[5]}}', '{{task[6]}}')">
+                <div class="left-side col-lg-10">
+                    <h2>{{task[2]}}</h2>
+                    <p>{{task[3]}}
+                    </p>
+                </div>
+                <div class="right-side col-lg-2">
+                    <p>{{task[4]}}</p>
+                    {% if task[5] == "Pending" %}
+                    <p style="color: rgb(179, 179, 3);" >{{task[5]}}</p>
+                    {% endif %}
+                    {% if task[5] == "Completed" %}
+                    <p style="color: green;" >{{task[5]}}</p>
+                    {% endif %}
+                    <p><span>Due:</span> {{task[6]}}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+
+        <div class="add-section">
+            <button href="/" style="border: none; background: none;" onclick="OpenModal()"> 
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="rgb(60, 60, 60)" class="bi bi-plus-square-dotted add" viewBox="0 0 16 16">
+                <path d="M2.5 0c-.166 0-.33.016-.487.048l.194.98A1.51 1.51 0 0 1 2.5 1h.458V0H2.5zm2.292 0h-.917v1h.917V0zm1.833 0h-.917v1h.917V0zm1.833 0h-.916v1h.916V0zm1.834 0h-.917v1h.917V0zm1.833 0h-.917v1h.917V0zM13.5 0h-.458v1h.458c.1 0 .199.01.293.029l.194-.981A2.51 2.51 0 0 0 13.5 0zm2.079 1.11a2.511 2.511 0 0 0-.69-.689l-.556.831c.164.11.305.251.415.415l.83-.556zM1.11.421a2.511 2.511 0 0 0-.689.69l.831.556c.11-.164.251-.305.415-.415L1.11.422zM16 2.5c0-.166-.016-.33-.048-.487l-.98.194c.018.094.028.192.028.293v.458h1V2.5zM.048 2.013A2.51 2.51 0 0 0 0 2.5v.458h1V2.5c0-.1.01-.199.029-.293l-.981-.194zM0 3.875v.917h1v-.917H0zm16 .917v-.917h-1v.917h1zM0 5.708v.917h1v-.917H0zm16 .917v-.917h-1v.917h1zM0 7.542v.916h1v-.916H0zm15 .916h1v-.916h-1v.916zM0 9.375v.917h1v-.917H0zm16 .917v-.917h-1v.917h1zm-16 .916v.917h1v-.917H0zm16 .917v-.917h-1v.917h1zm-16 .917v.458c0 .166.016.33.048.487l.98-.194A1.51 1.51 0 0 1 1 13.5v-.458H0zm16 .458v-.458h-1v.458c0 .1-.01.199-.029.293l.981.194c.032-.158.048-.32.048-.487zM.421 14.89c.183.272.417.506.69.689l.556-.831a1.51 1.51 0 0 1-.415-.415l-.83.556zm14.469.689c.272-.183.506-.417.689-.69l-.831-.556c-.11.164-.251.305-.415.415l.556.83zm-12.877.373c.158.032.32.048.487.048h.458v-1H2.5c-.1 0-.199-.01-.293-.029l-.194.981zM13.5 16c.166 0 .33-.016.487-.048l-.194-.98A1.51 1.51 0 0 1 13.5 15h-.458v1h.458zm-9.625 0h.917v-1h-.917v1zm1.833 0h.917v-1h-.917v1zm1.834-1v1h.916v-1h-.916zm1.833 1h.917v-1h-.917v1zm1.833 0h.917v-1h-.917v1zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+            </svg>
+        </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block addsection %}
+
+<div class="modall"  id="mymodal">
+    <div class="add-modal" id="add-modal">
+        <form action="/add" method="post">
+            <div class="modal-header">
+                <h3>Add Task</h3>
+                <button class="close-btn" onclick="CloseModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" fill="rgb(153, 6, 6)" class="bi bi-x-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                </button>
+            </div>
+            <div class="mb-3">
+                <label for="title" class="title-label form-label">Title:</label>
+                <input class="title-input form-control" type="text" id="title" name="title" placeholder="Title">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="description-label form-label">Description:</label>
+                <input class="description-input form-control" type="text" id="description" name="description" placeholder="Description">
+                
+            </div>
+            <div class="mb-3">
+                <label for="priority" class="priority-label form-label">Priority:</label>
+                <select class="form-select priority-input form-control" id="priority" name="priority" aria-label="Default select example">
+                    <option selected value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hight">High</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <div>
+                <label for="status" class="status-label form-label">Status:</label>
+            </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input status-input form-control" type="radio" name="status" id="status" value="Pending">
+                    <label class="form-check-label" for="inlineRadio1">Pending</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input status-input form-control" type="radio" name="status" id="status" value="Completed">
+                    <label class="form-check-label" for="inlineRadio2">Completed</label>
+                </div>
+                
+            </div>
+            <div class="mb-3">
+                <label for="date" class="date-label form-label">Due Date:</label>
+                <input class="date-input form-control" type="datetime-local" id="date" name="date">
+            </div>
+            
+            <hr>
+            <div class="btn-div">
+                <button class="btn submit-btn" type="submit">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block taskeditsection %}
+
+<div class="modals"  id="modals">
+    <div class="edit-modal" id="edit-modal">
+        <form method="post">
+            <div class="modal-header">
+                <h3>Task</h3>
+                <button class="close-btn" onclick="CloseModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="20" fill="rgb(153, 6, 6)" class="bi bi-x-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                </button>
+            </div>
+            <div class="mb-3">
+                <label for="id" class="title-label form-label">ID:</label>
+                <input class="title-input form-control" type="text" id="idplace" name="id">
+            </div>
+            <div class="mb-3">
+                <label for="title" class="title-label form-label">Title:</label>
+                <input class="title-input form-control" type="text" id="titleplace" name="title">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="description-label form-label">Description:</label>
+                <input class="description-input form-control" type="text" id="descriptionplace" name="description">
+                
+            </div>
+            <div class="mb-3">
+                <label for="priority" class="priority-label form-label">Priority:</label>
+                <select class="form-select priority-input form-control" id="priority" name="priority" aria-label="Default select example">
+                    <option id="low" value="Low">Low</option>
+                    <option id="medium" value="Medium">Medium</option>
+                    <option id="high" value="High">High</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <div>
+                <label for="status" class="status-label form-label">Status:</label>
+            </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input status-input form-control" type="radio" name="status" id="statusPending" value="Pending">
+                    <label class="form-check-label" for="inlineRadio1">Pending</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input status-input form-control" type="radio" name="status" id="statusCompleted" value="Completed">
+                    <label class="form-check-label" for="inlineRadio2">Completed</label>
+                </div>
+                
+            </div>
+            <div class="mb-3">
+                <label for="date" class="date-label form-label">Due Date:</label>
+                <input class="date-input form-control" type="datetime-local" id="dateplace" name="date">
+            </div>
+            
+            <hr>
+            <div class="end-send">
+                <button class="btn" type="submit" formaction="/update" >Update</button>
+                <button class="btn" type="submit" formaction="/delete">Delete</button>  
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
